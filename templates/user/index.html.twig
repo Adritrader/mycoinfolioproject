@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users | Back{% endblock %}
+
+{% block body %}
+    <div class="page-breadcrumb">
+        <div class="row">
+            <div class="col-12 d-flex no-block align-items-center">
+                <h4 class="page-title">Users</h4>
+                <div class="ml-auto text-right">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a href="{{ path('users') }}">Users</a></li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-7 col-lg-7 col-sm-10 mr-4 bg-light" style="border: 2px solid black">
+                <form method="get"
+                      class="form-inline">
+                    <div class="form-group">
+                        <input name="text"
+                               value=""
+                               type="text" placeholder="Buscar" aria-label="Search">
+                    </div>
+                    <div class="form-check-inline ml-3">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="optradio" id="nombre" value="nombre">&nbsp;Username
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-inline">
+                            <input class="form-check-input" type="radio" name="optradio" id="role" value="rol">&nbsp;Rol
+                            &nbsp;
+                        </label></div>
+                    <div class="form-check-inline">
+                        <label class="form-check-inline">
+                            <input class="form-check-input" type="radio" name="optradio" id="both" value="both" checked>&nbsp;Ambos
+                            &nbsp;
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button style="margin-top: 15px; margin-left: 0px" class="button-four" type="submit"
+                                name="botonFiltrar">Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="container-fluid">
+            <div class="row justify-content-start">
+                <div class="col-7 col-lg-6 ml-3">
+                    <div><a style="text-decoration: none; color: white" class="btn" href="{{ path('app_register') }}">
+                            <button class="btn btn-primary">
+                                <i class="fa fa-plus-circle">
+                                </i> Add user
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row justify-content-start">
+                    <div class="col-3"></div>
+                    <div class="col-lg-12 col-12">
+                        <table class="table table-striped">
+                            <tr>
+                                <th class="text-center">Avatar</th>
+                                <th class="text-center">Username</th>
+                                <th class="text-center">Role</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Created</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                            {% if users %}
+                                {% for user in users %}
+                                    <tr>
+                                        <td class="text-center"><img
+                                                    src="{{ asset(avatar_public_directory ~  user.avatar) }}"
+                                                    height="125" width="125"></td>
+                                        <td class="text-center">{{ user.username }}</td>
+                                        <td class="text-center">{{ user.email }}</td>
+                                        <td class="text-center">{{ user.createdat | date }}</td>
+                                        <td class="text-center" style="width: 140px">
+
+                                            <a href="{{ path('show_user', {id: user.id}) }}">
+                                                <button type="button" class="btn btn-info my-1"><i class="fa fa-eye mx-1"></i>
+                                                    show
+                                                </button>
+                                            </a>
+                                            <a href="{{ path('edit_user', {id: user.id}) }}">
+                                                <button type="button" class="btn btn-warning my-1"><i class="fa fa-edit mx-1"></i>
+                                                    Edit
+                                                </button>
+                                            </a>
+                                            <a href="{{ path('delete_user', {id: user.id}) }}">
+                                                <button type="button" class="btn btn-danger my-1"><i class="fa fa-trash mx-1"></i>
+                                                    Delete
+                                                </button>
+                                            </a>
+                                        </td>
+
+
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <h2>There aren't any user</h2>
+                            {% endif %}
+                        </table>
+
+                        <div class="container-fluid">
+                            <div class="row justify-content-center">
+                                <div class="col-1">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+
+                                        </ul>
+                                    </nav>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,11 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+
+    globals:
+        design_public_directory: 'img/design/'
+        avatar_public_directory: 'img/avatars/'
+        analysis_public_directory: 'img/analysis/'
+
+when@test:
+    twig:
+        strict_variables: true

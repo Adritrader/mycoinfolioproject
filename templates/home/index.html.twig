@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Index | Back{% endblock %}
+
+{% block body %}
+
+
+
+    {% if users %}
+        {% for user in users %}
+
+            <div class="list-group-item">
+                <span class="text-center mx-3">{{user.username}}</span>
+                <span class="text-center mx-3">{{user.email}}</span>
+            </div>
+
+        {% endfor %}
+    {% else %}
+        <h2>There aren't users</h2>
+    {% endif %}
+{% endblock %}
