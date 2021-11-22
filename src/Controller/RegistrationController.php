@@ -36,7 +36,7 @@ class RegistrationController extends AbstractController
 
                     if(empty($filename)){
 
-                        $user->setAvatar("nofoto.jpg");
+                        $user->setAvatar("nophoto.jpg");
 
                     } else {
 
