@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PortfolioRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,22 @@ class Portfolio
      * @ORM\Column(type="float", nullable=true)
      */
     private $total_price;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="portfolios")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Contain::class, mappedBy="portfolio")
+     */
+    private $contains;
+
+    public function __construct()
+    {
+        $this->contains = new ArrayCollection();
+    }
 
 
 
@@ -71,6 +89,48 @@ class Portfolio
     public function setTotalPrice(?float $total_price): self
     {
         $this->total_price = $total_price;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Contain[]
+     */
+    public function getContains(): Collection
+    {
+        return $this->contains;
+    }
+
+    public function addContain(Contain $contain): self
+    {
+        if (!$this->contains->contains($contain)) {
+            $this->contains[] = $contain;
+            $contain->setPortfolio($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContain(Contain $contain): self
+    {
+        if ($this->contains->removeElement($contain)) {
+            // set the owning side to null (unless already changed)
+            if ($contain->getPortfolio() === $this) {
+                $contain->setPortfolio(null);
+            }
+        }
 
         return $this;
     }

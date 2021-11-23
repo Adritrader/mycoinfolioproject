@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\Analysis;
 use App\Entity\User;
 use App\Form\AnalysisType;
-use App\Form\EditUserType;
-use App\Form\UserType;
 use App\Repository\AnalysisRepository;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -59,7 +57,7 @@ class AnalysisController extends AbstractController
 
                 try {
                     $projectDir = $this->getParameter('kernel.project_dir');
-                    $posterFile->move($projectDir . '/public/img/', $filename);
+                    $posterFile->move($projectDir . '/public/img/analysis', $filename);
 
                     if(empty($filename)){
 
@@ -80,7 +78,9 @@ class AnalysisController extends AbstractController
 
             // Assign the date of analysis
 
+            $user = $this->getUser();
             $analysis->setDate(new \DateTime());
+            $analysis->setUser($user);
 
             // Save analysis on BD
 
@@ -123,7 +123,7 @@ class AnalysisController extends AbstractController
 
                 try {
                     $projectDir = $this->getParameter('kernel.project_dir');
-                    $posterFile->move($projectDir . '/public/img/', $filename);
+                    $posterFile->move($projectDir . '/public/img/analysis', $filename);
                     $analysis->setImage($filename);
                 } catch (FileException $e) {
                     $this->addFlash(

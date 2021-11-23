@@ -37,20 +37,20 @@ class PortfolioController extends AbstractController
     }
 
     /**
-     * @Route("portfolios/create", name="create_portfolios")
+     * @Route("portfolios/{id}/create", name="create_portfolios", requirements={"id"="\d+"})
      */
-    public function create(Request $request)
+    public function create(Request $request, int $id)
     {
         $portfolio = new Portfolio();
 
-        $usuarioRepository = $this->getDoctrine()->getRepository(User::class);
-        $usuario = $usuarioRepository->find("6");
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepository->find($id);
 
 
         // Assign the date of analysis
 
         $portfolio->setCreatedAt(new \DateTimeImmutable());
-        $portfolio->setUser($usuario);
+        $portfolio->setUser($user);
 
         // Save analysis on BD
 
@@ -60,13 +60,13 @@ class PortfolioController extends AbstractController
 
         //Logger
 
-        $logger = new Logger('Analysis');
+        $logger = new Logger('Portfolio');
         $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-        $logger->info('Analysis ' . $portfolio->getId() . ' successfully registered on ' . date("Y-m-d H:i:s", time()));
+        $logger->info('Portfolio ' . $portfolio->getId() . ' successfully registered on ' . date("Y-m-d H:i:s", time()));
 
         // Flash message
 
-        $this->addFlash('success', "Analysis has been created succesfully");
+        $this->addFlash('success', "Portfolio has been created succesfully");
 
 
         return $this->redirectToRoute('portfolios');

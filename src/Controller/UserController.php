@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\EditUserFormType;
 use App\Form\EditUserType;
 use App\Form\UserType;
 use Monolog\Handler\StreamHandler;
@@ -40,80 +41,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("users/create", name="create_user")
-     */
-    public function createBack(Request $request, UserPasswordHasherInterface $encoder)
-    {
-        $user = new User();
-
-        $form = $this->createForm(UserType::class, $user);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $form->getData();
-            if ($posterFile = $form['avatar']->getData()) {
-                $filename = bin2hex(random_bytes(6)) . '.' . $posterFile->guessExtension();
-
-                try {
-                    $projectDir = $this->getParameter('kernel.project_dir');
-                    $posterFile->move($projectDir . '/public/img/', $filename);
-
-                    if(empty($filename)){
-
-                        $user->setAvatar("nofoto.jpg");
-
-                    } else {
-
-                        $user->setAvatar($filename);
-
-                    }
-                } catch (FileException $e) {
-                    $this->addFlash('danger', $e->getMessage());
-                    return $this->redirectToRoute('index');
-                }
-            }
-
-            //Encriptamos la contraseña
-
-            $password = $user->getPassword();
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]);
-            $user->setPassword($hashedPassword);
-
-
-            // Asignamos la fecha de actualización, por defecto es la fecha de creación del usuario
-
-            $user->setCreatedAt(new \DateTime());
-
-
-            $updated = date("Y-m-d H:i:s", time());
-            $user->setUpdatedAt($updated);
-
-            // Guardamos el usuario en la BD
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user );
-            $entityManager->flush();
-
-            //Logger
-
-            $logger = new Logger('User');
-            $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-            $logger->info('User ' . $user->getUsername() . ' successfully registered on ' . date("Y-m-d H:i:s", time()));
-
-            // Flash message
-
-            $this->addFlash('success', "Se ha registrado correctamente");
-
-
-            return $this->redirectToRoute('users');
-        }
-        return $this->render('user/create_user.html.twig', array(
-            'form' => $form->createView()));
-    }
-
-
-    /**
      * @Route("/users/{id}/profile", name="show_user", requirements={"id"="\d+"})
      */
     public function showUserBack(int $id)
@@ -142,43 +69,43 @@ class UserController extends AbstractController
     public function editUser(int $id, Request $request)
     {
 
-        $usuarioRepository = $this->getDoctrine()->getRepository(User::class);
-        $usuarios = $usuarioRepository->find($id);
-        $form = $this->createForm(EditUserType::class, $usuarios);
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        $users = $userRepository->find($id);
+        $form = $this->createForm(EditUserFormType::class, $users);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $usuarios = $form->getData();
+            $users = $form->getData();
             if ($posterFile = $form['avatar']->getData()) {
                 $filename = bin2hex(random_bytes(6)) . '.' . $posterFile->guessExtension();
 
                 try {
                     $projectDir = $this->getParameter('kernel.project_dir');
-                    $posterFile->move($projectDir . '/public/img/', $filename);
-                    $usuarios->setAvatar($filename);
+                    $posterFile->move($projectDir . '/public/img/avatars', $filename);
+                    $users->setAvatar($filename);
                 } catch (FileException $e) {
                     $this->addFlash(
                         'danger',
                         $e->getMessage()
                     );
-                    return $this->redirectToRoute('index');
+                    return $this->redirectToRoute('home');
                 }
             }
 
-            $usuarios->setModifiedAt(new \DateTime());
+            $users->setModifiedAt(new \DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($usuarios);
+            $entityManager->persist($users);
             $entityManager->flush();
-            $this->addFlash('success', "User " . $usuarios->getUsername() . " has been successfully edited!");
+            $this->addFlash('success', "User " . $users->getUsername() . " has been successfully edited!");
 
             //LOGGER
 
             $logger = new Logger('usuario');
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-            $logger->info('User ' . $usuarios->getUsername() . ' has been edited successfully');
+            $logger->info('User ' . $users->getUsername() . ' has been edited successfully');
 
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('home');
         }
         return $this->render('user/edit_user.html.twig', array(
             'form' => $form->createView()));
@@ -189,9 +116,6 @@ class UserController extends AbstractController
      */
     public function delete(int $id)
     {
-
-
-
 
         /*
         $this->denyAccessUnlessGranted('ROLE_ADMIN',
@@ -217,20 +141,20 @@ class UserController extends AbstractController
 
         $entityManager =$this->getDoctrine()->getManager();
         $usuarioRepository = $this->getDoctrine()->getRepository(User::class);
-        $usuario = $usuarioRepository->find($id);
+        $user = $usuarioRepository->find($id);
 
-        if ($usuario) {
-            $entityManager->remove($usuario);
+        if ($user) {
+            $entityManager->remove($user);
             $entityManager->flush();
-            $this->addFlash('success', "El usuario " . $usuario->getUsername() . " ha sido eliminado correctamente!");
+            $this->addFlash('success', "El usuario " . $user->getUsername() . " ha sido eliminado correctamente!");
 
             //LOGGER
 
             $logger = new Logger('usuario');
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-            $logger->info("El usuario " . $usuario->getUsername() . " ha sido eliminado");
+            $logger->info("El usuario " . $user->getUsername() . " ha sido eliminado");
 
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('home');
         }
         return $this->render('user/create_category.html.twig');
     }

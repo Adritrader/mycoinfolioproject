@@ -60,7 +60,7 @@ class CryptoController extends AbstractController
             $this->addFlash('success', "Crypto has been added succesfully");
 
 
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('home');
         }
 
 

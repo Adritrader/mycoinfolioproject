@@ -23,8 +23,8 @@ class AnalysisType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class)
 
+            ->add('title', TextType::class)
             ->add('category', EntityType::class, ['class' =>
                 Category::class, 'choice_label' => 'name'])
             ->add('content', TextareaType::class)

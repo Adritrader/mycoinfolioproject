@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -62,6 +64,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $newsletter;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Portfolio::class, mappedBy="user")
+     */
+    private $portfolios;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Analysis::class, mappedBy="user")
+     */
+    private $analyses;
+
+    public function __construct()
+    {
+        $this->portfolios = new ArrayCollection();
+        $this->analyses = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,7 +112,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
@@ -202,6 +220,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNewsletter(bool $newsletter): self
     {
         $this->newsletter = $newsletter;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Portfolio[]
+     */
+    public function getPortfolios(): Collection
+    {
+        return $this->portfolios;
+    }
+
+    public function addPortfolio(Portfolio $portfolio): self
+    {
+        if (!$this->portfolios->contains($portfolio)) {
+            $this->portfolios[] = $portfolio;
+            $portfolio->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePortfolio(Portfolio $portfolio): self
+    {
+        if ($this->portfolios->removeElement($portfolio)) {
+            // set the owning side to null (unless already changed)
+            if ($portfolio->getUser() === $this) {
+                $portfolio->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Analysis[]
+     */
+    public function getAnalyses(): Collection
+    {
+        return $this->analyses;
+    }
+
+    public function addAnalysis(Analysis $analysis): self
+    {
+        if (!$this->analyses->contains($analysis)) {
+            $this->analyses[] = $analysis;
+            $analysis->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnalysis(Analysis $analysis): self
+    {
+        if ($this->analyses->removeElement($analysis)) {
+            // set the owning side to null (unless already changed)
+            if ($analysis->getUser() === $this) {
+                $analysis->setUser(null);
+            }
+        }
 
         return $this;
     }

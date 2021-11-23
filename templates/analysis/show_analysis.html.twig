@@ -10,7 +10,7 @@
             <div class="ml-auto text-right">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ path('index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{ path('analysis') }}">Analysis</a></li>
                     </ol>
                 </nav>
@@ -30,7 +30,7 @@
                         <section class="card border shadow mt-3">
                             <div class="row p-3">
                                 <div class="col-3">
-                                    <img class="w-100 p-3" src="{{ asset(avatar_public_directory ~  analysis.image) }}" alt="imagen-entrada-blog">
+                                    <img class="w-100 p-3" src="{{ asset(analysis_public_directory ~  analysis.image) }}" alt="imagen-entrada-blog">
                                 </div>
                                 <div class="col-8">
                                     <h1 class="titulo-entrada">{{ analysis.title }}</h1>
@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="row justify-content-start mt-4 mb-0">
                                         <div class="col-3">
-                                            <img class="w-100 p-3" src="{{ asset(avatar_public_directory ~  analysis.image) }}" alt="imagen-entrada-blog">
+                                            <img class="w-100 p-3" src="{{ asset(analysis_public_directory ~  analysis.image) }}" alt="imagen-entrada-blog">
                                         </div>
                                         <div class="col-8">
                                         <p class="fecha-entrada mt-3"><i class="fas fa-calendar"></i>&nbsp;Published on: <span>{{ analysis.date | date }}</span><span class="mx-5 px-3 bg-primary">{{analysis.category.name}}</span></p>
