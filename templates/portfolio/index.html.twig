@@ -25,14 +25,16 @@
         <div class="container-fluid">
             <div class="row justify-content-start">
                 <div class="col-7 col-lg-6 ml-3">
-                    <div><a style="text-decoration: none; color: white" class="btn"
+                    <div>
+
+                        {% if app.user %}<a style="text-decoration: none; color: white" class="btn"
                             href="{{ path('create_portfolios', {id: app.user.id}) }}">
                             <button class="btn btn-primary">
                                 <i class="fa fa-plus-circle">
                                 </i> Add portfolio
                             </button>
 
-                        </a>
+                        </a>{% endif %}
                     </div>
                 </div>
             </div>
@@ -44,10 +46,11 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="list-group-item">
+
                                 <span class="text-center mx-3">{{ portfolio.id }}</span>
                                 <span class="text-center mx-3">{{ portfolio.createdat | date }}</span>
                                 <span class="text-center mx-3">{{ portfolio.modifiedat | date }}</span>
-                                <span class="text-center mx-3">{{ portfolio.user.id }}</span>
+                                <span class="text-center mx-3">{{ portfolio.user.username }}</span>
                                 <hr>
 
                                 <a style="text-decoration: none; color: white" class="btn"

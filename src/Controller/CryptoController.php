@@ -69,16 +69,13 @@ class CryptoController extends AbstractController
     }
 
     /**
-     * @Route("/portfolio/{id}/edit/crypto", name="edit_crypto")
+     * @Route("/portfolio/{id}/show/edit/{id_crypto}/crypto", name="edit_crypto")
      */
-    public function edit(int $id, Request $request)
+    public function edit(int $id, int $id_crypto, Request $request)
     {
 
-        $portfolioRepository = $this->getDoctrine()->getRepository(Portfolio::class);
-        $portfolio = $portfolioRepository->find($id);
-
         $cryptoRepository = $this->getDoctrine()->getRepository(Crypto::class);
-        $crypto = $cryptoRepository->find($id);
+        $crypto = $cryptoRepository->find($id_crypto);
 
         $form = $this->createForm(EditCryptoType::class, $crypto);
         $form->handleRequest($request);
@@ -87,23 +84,50 @@ class CryptoController extends AbstractController
             $crypto = $form->getData();
 
 
-            $usuarios->setModifiedAt(new \DateTime());
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($usuarios);
+            $entityManager->persist($crypto);
             $entityManager->flush();
-            $this->addFlash('success', "El usuario " . $usuarios->getUsername() . " ha sido editado correctamente!");
+            $this->addFlash('success', "Crypto " . $crypto->getName() . " has been edited correctly!");
 
             //LOGGER
 
-            $logger = new Logger('usuario');
+            $logger = new Logger('crypto');
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-            $logger->info('Se ha editado el usuario' . $usuarios->getUsername() . 'correctamente');
+            $logger->info('Crypto with id:' . $crypto->getId() . ', has been edited');
 
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('show_portfolio', array('id' => $id));
         }
-        return $this->render('user/edit_user.html.twig', array(
+        return $this->render('crypto/index.html.twig', array(
             'form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/portfolio/{id}/crypto/{id_crypto}/show", name="show_crypto", requirements={"id"="\d+"})
+     */
+    public function show(int $id)
+    {
+
+        /*$this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Acceso restringido a administradores');*/
+        $portfolioRepository = $this->getDoctrine()->getRepository(Portfolio::class);
+        $portfolio = $portfolioRepository->find($id);
+
+        $containRepository = $this->getDoctrine()->getRepository(Contain::class);
+        $contain = $containRepository->findBy(array('portfolio' => $id),array('id' => 'ASC'),1 ,0)[0];
+
+
+
+        if ($portfolio)
+        {
+            return $this->render('portfolio/show_portfolio.html.twig', ["portfolio"=>$portfolio, "contain" => $contain]
+            );
+        }
+        else
+            return $this->render('portfolio/show_portfolio.html.twig', [
+                    'portfolio' => null,
+                    "contain" => null]
+            );
     }
 
 }

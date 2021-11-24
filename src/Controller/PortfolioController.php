@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Contain;
 use App\Entity\Portfolio;
 use App\Entity\User;
 use Monolog\Handler\StreamHandler;
@@ -84,14 +85,21 @@ class PortfolioController extends AbstractController
             null, 'Acceso restringido a administradores');*/
         $portfolioRepository = $this->getDoctrine()->getRepository(Portfolio::class);
         $portfolio = $portfolioRepository->find($id);
+
+        $containRepository = $this->getDoctrine()->getRepository(Contain::class);
+        $contain = $containRepository->findBy(array('portfolio' => $id),array('id' => 'ASC'),20 ,0);
+
+
+
         if ($portfolio)
         {
-            return $this->render('portfolio/show_portfolio.html.twig', ["portfolio"=>$portfolio]
+            return $this->render('portfolio/show_portfolio.html.twig', ["portfolio"=>$portfolio, "contain" => $contain]
             );
         }
         else
             return $this->render('portfolio/show_portfolio.html.twig', [
-                    'portfolio' => null]
+                    'portfolio' => null,
+                    "contain" => null]
             );
     }
 }

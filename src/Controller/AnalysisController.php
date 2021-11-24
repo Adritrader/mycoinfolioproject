@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Analysis;
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Form\AnalysisType;
 use App\Repository\AnalysisRepository;
@@ -160,12 +161,16 @@ class AnalysisController extends AbstractController
         $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
         $analysis = $analysisRepository->find($id);
 
+        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
+        $comment = $commentRepository->findBy(array('analysis' => $id),array('id' => 'ASC'),20 ,0);
+
         if ($analysis) {
-            return $this->render('analysis/show_analysis.html.twig', ["analysis" => $analysis]
+            return $this->render('analysis/show_analysis.html.twig', ["analysis" => $analysis, "comment" => $comment]
             );
         } else
             return $this->render('analysis/show_analysis.html.twig', [
-                    'analysis' => null]
+                    'analysis' => null,
+                    "comment" => null]
             );
     }
 

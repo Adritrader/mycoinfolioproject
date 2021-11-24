@@ -32,6 +32,17 @@ class Comment
      */
     private $picture;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Analysis::class, inversedBy="comments")
+     */
+    private $analysis;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +80,30 @@ class Comment
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getAnalysis(): ?Analysis
+    {
+        return $this->analysis;
+    }
+
+    public function setAnalysis(?Analysis $analysis): self
+    {
+        $this->analysis = $analysis;
 
         return $this;
     }
