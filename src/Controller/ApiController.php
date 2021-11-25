@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,38 +67,37 @@ class ApiController extends AbstractController
     }
 
     /**
-     *
      * @Route("/register", name="api_user_register", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function register(Request $request, UserPasswordEncoderInterface $encoder): JsonResponse
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher): JsonResponse
     {
         $user = new User();
         $data = [];
         if ($content = $request->getContent()) {
             $data = json_decode($content, true);
         }
-
         try {
             $user->setUsername($data["username"]);
             $user->setEmail($data["email"]);
             $user->setAvatar($data["avatar"]);
             $user->setNewsletter($data["newsletter"]);
-
-
-            //Encrypt the password
-
-            $hashedPassword = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hashedPassword);
-
+            // encode the plain password
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $data["password"]
+                )
+            );
             // Assigning update date, its the creation time by default.
-
-            $user->setCreatedAt(new \DateTime());
-
+            $user->setCreatedAt(new \DateTimeImmutable());
+            /*
+            // Update date, null default
 
             $updated = date("Y-m-d H:i:s", time());
-            $user->setUpdatedAt($updated);
-
-
+            $user->setModifiedAt($updated);
+            */
         } catch (\Exception $e) {
             $error["code"] = $e->getCode();
             $error["message"] = $e->getMessage();
@@ -106,9 +106,13 @@ class ApiController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
-
         return new JsonResponse($user, Response::HTTP_CREATED);
+
+        //{"id": 5, "username": "alberto","password": "1234",
+        // "email" : "alberto@gmail.com", "avatar": "nophoto.jpg", "newsletter": 0}
     }
+
+
 
     /**
      * @Route("/edit/{id}/user", name="api_update_user", methods={"PUT"})
@@ -162,6 +166,35 @@ class ApiController extends AbstractController
 
         else
             return new JsonResponse("error", Response::HTTP_NOT_FOUND);
+    }
+
+
+
+    public function createAnalysis(Request $request): JsonResponse
+    {
+        $analysis = new Analysis();
+        $data = [];
+        if ($content = $request->getContent()) {
+            $data = json_decode($content, true);
+        }
+
+        try {
+            $analysis->setTitle($data["title"]);
+            $analysis->setOverview($data["overview"]);
+            $analysis->setTagline($data["tagline"]);
+            $analysis->setPoster($data["poster"]);
+            $analysis->setReleaseDate(new \DateTime($data["release_date"]));
+
+        } catch (\Exception $e) {
+            $error["code"] = $e->getCode();
+            $error["message"] = $e->getMessage();
+            return new JsonResponse($error, Response::HTTP_BAD_REQUEST);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($analysis);
+        $em->flush();
+
+        return new JsonResponse($analysis, Response::HTTP_CREATED);
     }
 
     //Comments Endpoint

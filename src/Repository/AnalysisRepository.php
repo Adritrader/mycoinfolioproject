@@ -47,4 +47,17 @@ class AnalysisRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @return Analysis[] Returns an array of Analysis objects
+     */
+    public function lastAnalysis(): array
+    {
+        $qb = $this->createQueryBuilder('ana');
+        $qb->orderBy('ana.id', 'DESC');
+        $qb->setMaxResults(4);
+        //$qb->setFirstResult(4);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
 }
