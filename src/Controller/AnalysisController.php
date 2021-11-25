@@ -131,7 +131,8 @@ class AnalysisController extends AbstractController
                         'danger',
                         $e->getMessage()
                     );
-                    return $this->redirectToRoute('index');
+                    return $this->redirectToRoute('home');
+
                 }
             }
 
@@ -147,7 +148,7 @@ class AnalysisController extends AbstractController
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
             $logger->info('Analysis ' . $analysis->getId() . ' successfully edited on ' . date("Y-m-d H:i:s", time()));
 
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('home');
         }
         return $this->render('analysis/edit_analysis.html.twig', array(
             'form' => $form->createView()));
@@ -175,7 +176,7 @@ class AnalysisController extends AbstractController
     }
 
     /**
-     *@Route("/analysis/{id}/delete", name="delete_analysis", requirements={"id"="\d+"})
+     *@Route("/comment/{id}/delete", name="delete_comment", requirements={"id"="\d+"})
      */
     public function delete(int $id)
     {
@@ -184,15 +185,15 @@ class AnalysisController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN',
             null, 'Acceso restringido a administradores');*/
 
-        $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
-        $analysis = $analysisRepository->find($id);
+        $commentRepository = $this->getDoctrine()->getRepository(Analysis::class);
+        $comment = $commentRepository->find($id);
 
-        return $this->render('analysis/delete_analysis.html.twig', ["analysis" => $analysis]);
+        return $this->render('analysis/delete_analysis.html.twig', ["comment" => $comment]);
 
     }
 
     /**
-     *@Route("/analysis/{id}/destroy", name="destroy_analysis", requirements={"id"="\d+"})
+     *@Route("/comment/{id}/destroy", name="destroy_comment", requirements={"id"="\d+"})
      */
     public function destroy(int $id)
     {
@@ -203,23 +204,23 @@ class AnalysisController extends AbstractController
 
 
         $entityManager =$this->getDoctrine()->getManager();
-        $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
-        $analysis = $analysisRepository->find($id);
+        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
+        $comment = $commentRepository->find($id);
 
-        if ($analysis) {
-            $entityManager->remove($analysis);
+        if ($comment) {
+            $entityManager->remove($comment);
             $entityManager->flush();
-            $this->addFlash('success', "Analysis " . $analysis->getId() . " has been deleted!");
+            $this->addFlash('success', "Analysis " . $comment->getId() . " has been deleted!");
 
             //LOGGER
 
             $logger = new Logger('Analysis');
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-            $logger->info("Analysis " . $analysis->getId() . " has been deleted");
+            $logger->info("Analysis " . $comment->getId() . " has been deleted");
 
             return $this->redirectToRoute('analysis');
         }
-        return $this->render('analysis/index.html.twig');
+        return $this->render('comment/index.html.twig');
     }
 
 }

@@ -7,6 +7,7 @@ use App\Entity\Category;
 use App\Entity\Comment;
 use App\Form\CategoryType;
 use App\Form\CommentType;
+use App\Form\EditCommentType;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,12 +30,12 @@ class CommentsController extends AbstractController
 
         if ( $comments )
         {
-            return $this->render('analysis/index.html.twig', [
+            return $this->render('comments/index.html.twig', [
                     "comments" => $comments]
             );
         }
         else
-            return $this->render('analysis/index.html.twig', [
+            return $this->render('comments/index.html.twig', [
                     'comments' => null,
                 ]
             );
@@ -50,10 +51,7 @@ class CommentsController extends AbstractController
         $analysis = $analysisRepository->find($id);
 
         $form = $this->createForm(CommentType::class, $comment);
-
         $form->handleRequest($request);
-
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment = $form->getData();
@@ -63,7 +61,7 @@ class CommentsController extends AbstractController
 
                 try {
                     $projectDir = $this->getParameter('kernel.project_dir');
-                    $posterFile->move($projectDir . '/public/img/avatars', $filename);
+                    $posterFile->move($projectDir . '/public/img/analysis', $filename);
                     $comment->setPicture($filename);
                 } catch (FileException $e) {
                     $this->addFlash('danger', $e->getMessage());
@@ -100,8 +98,55 @@ class CommentsController extends AbstractController
             return $this->redirectToRoute('show_analysis', array('id' => $id));
         }
 
-
         return $this->render('comments/create_comment.html.twig', array(
+            'form' => $form->createView()));
+    }
+
+    /**
+     * @Route("/comment/{id}/edit", name="edit_comment")
+     */
+    public function editAnalysis(int $id, Request $request)
+    {
+
+        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
+        $comment = $commentRepository->find($id);
+        $form = $this->createForm(EditCommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment = $form->getData();
+            if ($posterFile = $form['image']->getData()) {
+                $filename = bin2hex(random_bytes(6)) . '.' . $posterFile->guessExtension();
+
+                try {
+                    $projectDir = $this->getParameter('kernel.project_dir');
+                    $posterFile->move($projectDir . '/public/img/analysis', $filename);
+                    $comment->setPicture($filename);
+                } catch (FileException $e) {
+                    $this->addFlash(
+                        'danger',
+                        $e->getMessage()
+                    );
+                    return $this->redirectToRoute('home');
+
+                }
+            }
+
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            $this->addFlash('success', "Analysis number " . $comment->getId() . " has been edited successfully!");
+
+            //LOGGER
+
+            $logger = new Logger('Analysis');
+            $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
+            $logger->info('Analysis ' . $comment->getId() . ' successfully edited on ' . date("Y-m-d H:i:s", time()));
+
+            return $this->redirectToRoute('home');
+        }
+        return $this->render('comment/edit_analysis.html.twig', array(
             'form' => $form->createView()));
     }
 }

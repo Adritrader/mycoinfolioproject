@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-8">
                             <h1 class="titulo-entrada">{{ analysi.title }}</h1>
-                            <p class="fecha-entrada"><i class="fas fa-calendar"></i>&nbsp;Published on: <span>{{ analysi.date | date }}</span><span class="mx-5 px-3 bg-primary">{{analysi.category.name}}</span></p>
+                            <p class="fecha-entrada"><i class="fas fa-user"></i>{{ analysi.user.username }}<i class="fas fa-calendar"></i>Published on: <span>{{ analysi.date | date }}</span><span class="mx-5 px-3 bg-primary">{{analysi.category.name}}</span></p>
                             <p class="texto-entrada">{{ analysi.content }} </p>
                             <div class="row justify-content-end mt-4 mb-0">
                                 <a href="{{path('create_comment', {id: analysi.id})}}"><button class="btn btn-cyan mx-1">Reply</button></a>
