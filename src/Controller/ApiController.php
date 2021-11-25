@@ -129,6 +129,8 @@ class ApiController extends AbstractController
 
         $user->setAvatar($data['avatar']);
 
+        return "";
+
     }
 
 
