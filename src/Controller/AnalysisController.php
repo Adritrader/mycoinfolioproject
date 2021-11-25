@@ -176,7 +176,7 @@ class AnalysisController extends AbstractController
     }
 
     /**
-     *@Route("/comment/{id}/delete", name="delete_comment", requirements={"id"="\d+"})
+     *@Route("/analysis/{id}/delete", name="delete_analysis", requirements={"id"="\d+"})
      */
     public function delete(int $id)
     {
@@ -185,15 +185,15 @@ class AnalysisController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN',
             null, 'Acceso restringido a administradores');*/
 
-        $commentRepository = $this->getDoctrine()->getRepository(Analysis::class);
-        $comment = $commentRepository->find($id);
+        $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
+        $analysis = $analysisRepository->find($id);
 
-        return $this->render('analysis/delete_analysis.html.twig', ["comment" => $comment]);
+        return $this->render('analysis/delete_analysis.html.twig', ["analysis" => $analysis]);
 
     }
 
     /**
-     *@Route("/comment/{id}/destroy", name="destroy_comment", requirements={"id"="\d+"})
+     *@Route("/analysis/{id}/destroy", name="destroy_analysis", requirements={"id"="\d+"})
      */
     public function destroy(int $id)
     {
@@ -204,23 +204,23 @@ class AnalysisController extends AbstractController
 
 
         $entityManager =$this->getDoctrine()->getManager();
-        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
-        $comment = $commentRepository->find($id);
+        $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
+        $analysis = $analysisRepository->find($id);
 
-        if ($comment) {
-            $entityManager->remove($comment);
+        if ($analysis) {
+            $entityManager->remove($analysis);
             $entityManager->flush();
-            $this->addFlash('success', "Analysis " . $comment->getId() . " has been deleted!");
+            $this->addFlash('success', "Analysis " . $analysis->getId() . " has been deleted!");
 
             //LOGGER
 
             $logger = new Logger('Analysis');
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-            $logger->info("Analysis " . $comment->getId() . " has been deleted");
+            $logger->info("Analysis " . $analysis->getId() . " has been deleted");
 
             return $this->redirectToRoute('analysis');
         }
-        return $this->render('comment/index.html.twig');
+        return $this->render('analysis/index.html.twig');
     }
 
 }

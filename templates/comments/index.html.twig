@@ -41,7 +41,7 @@
                                     <p class="texto-entrada">{{ comment.message }} </p>
                                     <div class="row justify-content-end mt-4 mb-0">
                                         <a href="{{path('edit_comment', {id: comment.id})}}"><button class="btn btn-warning mx-1">Edit</button></a>
-                                        <a href="{{path('delete_comment', {id: comment.id})}}"><button class="btn btn-danger mx-1">Delete</button></a>
+                                        <a href="{{path('destroy_comment', {id: comment.id})}}"><button class="btn btn-danger mx-1">Delete</button></a>
                                     </div>
                                 </div>
                             </div>

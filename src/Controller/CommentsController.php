@@ -149,4 +149,35 @@ class CommentsController extends AbstractController
         return $this->render('comment/edit_analysis.html.twig', array(
             'form' => $form->createView()));
     }
+
+    /**
+     *@Route("/comments/{id}/destroy", name="destroy_comment", requirements={"id"="\d+"})
+     */
+    public function destroy(int $id)
+    {
+
+        /*
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Acceso restringido a administradores');*/
+
+
+        $entityManager =$this->getDoctrine()->getManager();
+        $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
+        $comment = $commentRepository->find($id);
+
+        if ($comment) {
+            $entityManager->remove($comment);
+            $entityManager->flush();
+            $this->addFlash('success', "Comment " . $comment->getId() . " has been deleted!");
+
+            //LOGGER
+
+            $logger = new Logger('Comment');
+            $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
+            $logger->info("Comment " . $comment->getId() . " has been deleted");
+
+            return $this->redirectToRoute('analysis');
+        }
+        return $this->render('analysis/index.html.twig');
+    }
 }
