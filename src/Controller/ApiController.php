@@ -29,6 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
@@ -109,9 +110,28 @@ class ApiController extends AbstractController
         return new JsonResponse($user, Response::HTTP_CREATED);
 
         //{"id": 5, "username": "alberto","password": "1234",
-        // "email" : "alberto@gmail.com", "avatar": "nophoto.jpg", "newsletter": 0}
+        // "email" : "alberto@gmail.com","roles": "ROLE_ADMIN", "avatar": "nophoto.jpg", "newsletter": 0}
     }
+    /**
+     *@Route("/login", name: "api_login", methods={"POST"})
+     *@param Request $request
+     *@return JsonResponse
+     */
+    public function index(User $user): Response
+    {
 
+        if (null === $user) {
+            return $this->json([
+                'message' => 'missing credentials'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        //$token   // somehow create an API token for $user
+
+        return $this->json([
+            'user'  => $user->getUserIdentifier(),
+            //'token' => $token
+        ]);
+    }
 
 
     /**
