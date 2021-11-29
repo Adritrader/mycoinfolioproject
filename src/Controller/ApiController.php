@@ -113,11 +113,11 @@ class ApiController extends AbstractController
         // "email" : "alberto@gmail.com","roles": "ROLE_ADMIN", "avatar": "nophoto.jpg", "newsletter": 0}
     }
     /**
-     *@Route("/login", name: "api_login", methods={"POST"})
+     *@Route("/login", name="api_login", methods={"POST"})
      *@param Request $request
      *@return JsonResponse
      */
-    public function index(User $user): Response
+    public function index(?User $user): Response
     {
 
         if (null === $user) {
@@ -125,11 +125,11 @@ class ApiController extends AbstractController
                 'message' => 'missing credentials'], Response::HTTP_UNAUTHORIZED);
         }
 
-        //$token   // somehow create an API token for $user
+        $token = "xP4aRwR_PuAzsv_GSfHt85tJFK2NDVSfu0_wASy26IM";   // somehow create an API token for $user
 
         return $this->json([
             'user'  => $user->getUserIdentifier(),
-            //'token' => $token
+            'token' => $token
         ]);
     }
 
