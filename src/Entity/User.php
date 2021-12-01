@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface, Serializable, JsonSerializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     /**
      * @ORM\Id
@@ -321,33 +321,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Seriali
         }
 
         return $this;
-    }
-
-    /**
-     * String representation of object.
-     * @link https://php.net/manual/en/serializable.serialize.php
-     * @return string|null The string representation of the object or null
-     * @throws Exception Returning other type than string or null
-     */
-    public function serialize(): ?string
-    {
-        return serialize([
-            $this->getId(),
-            $this->getUsername(),
-            $this->getEmail()
-        ]);
-    }
-
-    /**
-     * Constructs the object.
-     * @link https://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized The string representation of the object.
-     * @return void
-     */
-    public function unserialize($serialized)
-    {
-        list( $this->id, $this->username, $this->email) =
-            unserialize($serialized, ['allowed_classes' => false]);
     }
 
 

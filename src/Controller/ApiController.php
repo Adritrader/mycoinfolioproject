@@ -114,27 +114,6 @@ class ApiController extends AbstractController
         //{"id": 5, "username": "alberto","password": "1234",
         // "email" : "alberto@gmail.com","roles": "ROLE_ADMIN", "avatar": "nophoto.jpg", "newsletter": 0}
     }
-    /**
-     *@Route("/login", name="api_login", methods={"POST"})
-     *@param Request $request
-     *@return JsonResponse
-     */
-    public function index(?User $user): Response
-    {
-
-        if (null === $user) {
-            return $this->json([
-                'message' => 'missing credentials'], Response::HTTP_UNAUTHORIZED);
-        }
-
-        $token = "xP4aRwR_PuAzsv_GSfHt85tJFK2NDVSfu0_wASy26IM";   // somehow create an API token for $user
-
-        return $this->json([
-            'user'  => $user->getUserIdentifier(),
-            'token' => $token
-        ]);
-    }
-
 
     /**
      * @Route("/edit/{id}/user", name="api_update_user", methods={"PUT"})

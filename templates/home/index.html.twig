@@ -3,7 +3,47 @@
 {% block title %}Index | Back{% endblock %}
 
 {% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
 
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success fade show mt-3" role="alert" id="success">
+                        <i class="fas fa-check-circle mx-2"></i>
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true" onclick="Cierra()">&times;</span>
+                        </button>
+
+                    </div>
+                    <script>
+                        function Cierra() {
+                            var div = document.getElementById("success");
+                            div.style.display = "none";
+                        }
+                    </script>
+                {% endfor %}
+
+                {% for message in app.flashes('danger') %}
+                    <div class="alert alert-error fade show mt-3" role="alert" id="error">
+                        <i class="fas fa-exclamation-circle mx-2"></i>
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true" onclick="Cierra()">&times;</span>
+                        </button>
+                        <script>
+                            function Cierra() {
+                                var div = document.getElementById("error");
+                                div.style.display = "none";
+                            }
+                        </script>
+
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
 
 
     {% if users %}

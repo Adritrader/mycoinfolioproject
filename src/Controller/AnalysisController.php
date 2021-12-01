@@ -6,6 +6,7 @@ use App\Entity\Analysis;
 use App\Entity\Comment;
 use App\Entity\User;
 use App\Form\AnalysisType;
+use App\Form\EditAnalysisType;
 use App\Repository\AnalysisRepository;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -97,10 +98,10 @@ class AnalysisController extends AbstractController
 
             // Flash message
 
-            $this->addFlash('success', "Analysis has been created succesfully");
+            $this->addFlash('success', "User '". $analysis->getUser() ."' has been created analysis with ID: '" . $analysis->getId()."'.");
 
 
-            return $this->redirectToRoute('analysis');
+            return $this->redirectToRoute('home');
         }
         return $this->render('analysis/create_analysis.html.twig', array(
             'form' => $form->createView()));
@@ -114,7 +115,7 @@ class AnalysisController extends AbstractController
 
         $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
         $analysis = $analysisRepository->find($id);
-        $form = $this->createForm(AnalysisType::class, $analysis);
+        $form = $this->createForm(EditAnalysisType::class, $analysis);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

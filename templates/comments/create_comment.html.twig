@@ -5,7 +5,14 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row justify-content-center">
+            <a style="text-decoration: none; color: white" class="btn px-0 py-0 mt-0 " href="{{ path('analysis') }}">
+                <button class="btn btn-danger">
+                    <i class="far fa-arrow-alt-circle-left"></i> Back
+                </button>
+            </a>
             <div class="col-4">
+                <h2 class="mt-4">Reply to Analysis</h2>
+                <hr>
                 {% form_theme form 'bootstrap_4_layout.html.twig' %}
                 {{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
                 {{ form_start(form) }}

@@ -43,7 +43,7 @@ class CategoryController extends AbstractController
 
             // Flash message
 
-            $this->addFlash('success', "Category has been created succesfully");
+            $this->addFlash('success', "Category '" . $category->getName() . "' has been created succesfully");
 
 
             return $this->redirectToRoute('home');
