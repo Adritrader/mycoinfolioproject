@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
-class Comment
+class Comment implements \Serializable, \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -106,5 +107,28 @@ class Comment
         $this->analysis = $analysis;
 
         return $this;
+    }
+
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+    }
+
+    public function unserialize($data)
+    {
+        // TODO: Implement unserialize() method.
+    }
+
+    public function jsonSerialize()
+    {
+        return array( "comments" => [
+            "id" => $this->getId(),
+            "message" => $this->getMessage(),
+            "date" => $this->getDate(),
+            "picture" => $this->getPicture(),
+            "user" => $this->getUser(),
+            "analysis" => $this->getAnalysis(),
+
+        ]);
     }
 }

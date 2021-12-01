@@ -37,7 +37,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class ApiController extends AbstractController
 {
+    /////////////////
     //Users Endpoints
+    /////////////////
 
     /**
      * @Route("/users", name="api_users", methods={"GET"})
@@ -157,8 +159,9 @@ class ApiController extends AbstractController
 
     }
 
-
+    ////////////////////
     //Analysis Endpoints
+    ////////////////////
 
     /**
      * @Route("/analysis", name="api_analysis", methods={"GET"})
@@ -217,8 +220,9 @@ class ApiController extends AbstractController
         return new JsonResponse($analysis, Response::HTTP_CREATED);
     }
 
+    ///////////////////
     //Comments Endpoint
-
+    ///////////////////
 
     /**
      * @Route("/comments", name="api_comments", methods={"GET"})
@@ -249,7 +253,9 @@ class ApiController extends AbstractController
             return new JsonResponse("error", Response::HTTP_NOT_FOUND);
     }
 
+    ///////////////////
     //Contain Endpoints
+    ///////////////////
 
     /**
      * @Route("/contains", name="api_contain", methods={"GET"})
@@ -280,7 +286,9 @@ class ApiController extends AbstractController
             return new JsonResponse("error", Response::HTTP_NOT_FOUND);
     }
 
+    //////////////////
     //Crypto Endpoint
+    //////////////////
 
     /**
      * @Route("/cryptos", name="api_crypto", methods={"GET"})
@@ -311,7 +319,9 @@ class ApiController extends AbstractController
             return new JsonResponse("error", Response::HTTP_NOT_FOUND);
     }
 
+    ///////////////////////
     //Portfolio Endpoints
+    ///////////////////////
 
     /**
      * @Route("/portfolios", name="api_portolios", methods={"GET"})
@@ -342,7 +352,10 @@ class ApiController extends AbstractController
             return new JsonResponse("error", Response::HTTP_NOT_FOUND);
     }
 
+
+    ////////////////////
     //Category Endpoints
+    ////////////////////
 
     /**
      * @Route("/category", name="api_categories", methods={"GET"})

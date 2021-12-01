@@ -4,11 +4,12 @@ namespace App\Entity;
 
 use App\Repository\ContainRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=ContainRepository::class)
  */
-class Contain
+class Contain implements \Serializable, \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -56,5 +57,25 @@ class Contain
         $this->portfolio = $portfolio;
 
         return $this;
+    }
+
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+    }
+
+    public function unserialize($data)
+    {
+        // TODO: Implement unserialize() method.
+    }
+
+    public function jsonSerialize()
+    {
+        return array( "contains" => [
+            "id" => $this->getId(),
+            "crypto" => $this->getCrypto(),
+            "portfolio" => $this->getPortfolio(),
+
+        ]);
     }
 }

@@ -6,6 +6,9 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
+use JsonSerializable;
+use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,7 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, Serializable, JsonSerializable
 {
     /**
      * @ORM\Id
@@ -318,5 +321,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * String representation of object.
+     * @link https://php.net/manual/en/serializable.serialize.php
+     * @return string|null The string representation of the object or null
+     * @throws Exception Returning other type than string or null
+     */
+    public function serialize(): ?string
+    {
+        return serialize([
+            $this->getId(),
+            $this->getUsername(),
+            $this->getEmail()
+        ]);
+    }
+
+    /**
+     * Constructs the object.
+     * @link https://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        list( $this->id, $this->username, $this->email) =
+            unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+
+    public function jsonSerialize()
+    {
+        return array( "users" => [
+            "id" => $this->getId(),
+            "username" => $this->getUsername(),
+            "email" => $this->getEmail(),
+            "avatar" => $this->getAvatar(),
+            "created_at" => $this->getCreatedAt(),
+            "modified_at" => $this->getModifiedAt(),
+            "newsletter" => $this->getNewsletter(),
+            "comments" => $this->getComments(),
+            "portfolios" => $this->getPortfolios()
+        ]);
     }
 }

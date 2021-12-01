@@ -6,11 +6,12 @@ use App\Repository\CryptoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=CryptoRepository::class)
  */
-class Crypto
+class Crypto implements \Serializable, \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -130,5 +131,28 @@ class Crypto
         }
 
         return $this;
+    }
+
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+    }
+
+    public function unserialize($data)
+    {
+        // TODO: Implement unserialize() method.
+    }
+
+    public function jsonSerialize()
+    {
+        return array( "cryptos" => [
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "entry_price" => $this->getEntryPrice(),
+            "buy_date" => $this->getBuyDate(),
+            "quantity" => $this->getQuantity(),
+            "contains" => $this->getContains()
+
+        ]);
     }
 }

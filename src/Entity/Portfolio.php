@@ -6,11 +6,12 @@ use App\Repository\PortfolioRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=PortfolioRepository::class)
  */
-class Portfolio
+class Portfolio implements \Serializable, \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -136,4 +137,26 @@ class Portfolio
     }
 
 
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+    }
+
+    public function unserialize($data)
+    {
+        // TODO: Implement unserialize() method.
+    }
+
+    public function jsonSerialize()
+    {
+        return array( "portfolios" => [
+            "id" => $this->getId(),
+            "created_at" => $this->getCreatedAt(),
+            "modified_at" => $this->getModifiedAt(),
+            "total_price" => $this->getTotalPrice(),
+            "user" => $this->getUser(),
+            "contains" => $this->getContains()
+
+        ]);
+    }
 }

@@ -6,11 +6,12 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Category
+class Category implements \Serializable, \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -79,5 +80,25 @@ class Category
         }
 
         return $this;
+    }
+
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+    }
+
+    public function unserialize($data)
+    {
+        // TODO: Implement unserialize() method.
+    }
+
+    public function jsonSerialize()
+    {
+        return array( "contains" => [
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "analysis" => $this->getAnalyses(),
+
+        ]);
     }
 }
