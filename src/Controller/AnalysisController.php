@@ -24,6 +24,10 @@ class AnalysisController extends AbstractController
      */
     public function index(): Response
     {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
         $analysis = $analysisRepository->findAll();
 
@@ -46,6 +50,10 @@ class AnalysisController extends AbstractController
      */
     public function create(Request $request)
     {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $analysis = new Analysis();
 
         $form = $this->createForm(AnalysisType::class, $analysis);
@@ -113,6 +121,9 @@ class AnalysisController extends AbstractController
     public function editAnalysis(int $id, Request $request)
     {
 
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
         $analysis = $analysisRepository->find($id);
         $form = $this->createForm(EditAnalysisType::class, $analysis);
@@ -160,6 +171,9 @@ class AnalysisController extends AbstractController
      */
     public function show(int $id)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
         $analysis = $analysisRepository->find($id);
 
@@ -182,9 +196,8 @@ class AnalysisController extends AbstractController
     public function delete(int $id)
     {
 
-        /*
         $this->denyAccessUnlessGranted('ROLE_ADMIN',
-            null, 'Acceso restringido a administradores');*/
+            null, 'Access Denied');
 
         $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
         $analysis = $analysisRepository->find($id);
@@ -199,10 +212,8 @@ class AnalysisController extends AbstractController
     public function destroy(int $id)
     {
 
-        /*
         $this->denyAccessUnlessGranted('ROLE_ADMIN',
-            null, 'Acceso restringido a administradores');*/
-
+            null, 'Access Denied');
 
         $entityManager =$this->getDoctrine()->getManager();
         $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);

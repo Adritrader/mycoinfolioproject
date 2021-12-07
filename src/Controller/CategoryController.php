@@ -19,6 +19,10 @@ class CategoryController extends AbstractController
      */
     public function create(Request $request)
     {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $category = new Category();
 
         $form = $this->createForm(CategoryType::class, $category);

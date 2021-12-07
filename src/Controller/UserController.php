@@ -23,6 +23,8 @@ class UserController extends AbstractController
     public function index(): Response
     {
 
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
 
         $usersRepository = $this->getDoctrine()->getRepository(User::class);
         $users = $usersRepository->findAll();
@@ -46,13 +48,14 @@ class UserController extends AbstractController
     public function showUserBack(int $id)
     {
 
-        /*$this->denyAccessUnlessGranted('ROLE_ADMIN',
-            null, 'Acceso restringido a administradores');*/
-        $usuarioRepository = $this->getDoctrine()->getRepository(User::class);
-        $usuario = $usuarioRepository->find($id);
-        if ($usuario)
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepository->find($id);
+        if ($user)
         {
-            return $this->render('user/show_user.html.twig', ["user"=>$usuario]
+            return $this->render('user/show_user.html.twig', ["user"=>$user]
             );
         }
         else
@@ -68,6 +71,9 @@ class UserController extends AbstractController
      */
     public function editUser(int $id, Request $request)
     {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
 
         $userRepository = $this->getDoctrine()->getRepository(User::class);
         $users = $userRepository->find($id);
@@ -101,7 +107,7 @@ class UserController extends AbstractController
 
             //LOGGER
 
-            $logger = new Logger('usuario');
+            $logger = new Logger('User');
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
             $logger->info('User ' . $users->getUsername() . ' has been edited successfully');
 
@@ -117,14 +123,13 @@ class UserController extends AbstractController
     public function delete(int $id)
     {
 
-        /*
         $this->denyAccessUnlessGranted('ROLE_ADMIN',
-            null, 'Acceso restringido a administradores');*/
+            null, 'Access Denied');
 
-        $usuarioRepository = $this->getDoctrine()->getRepository(User::class);
-        $usuario = $usuarioRepository->find($id);
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepository->find($id);
 
-        return $this->render('user/delete_user.html.twig', ["user" => $usuario]);
+        return $this->render('user/delete_user.html.twig', ["user" => $user]);
 
     }
 
@@ -134,25 +139,24 @@ class UserController extends AbstractController
     public function destroy(int $id)
     {
 
-        /*
         $this->denyAccessUnlessGranted('ROLE_ADMIN',
-            null, 'Acceso restringido a administradores');*/
+            null, 'Access Denied');
 
 
         $entityManager =$this->getDoctrine()->getManager();
-        $usuarioRepository = $this->getDoctrine()->getRepository(User::class);
-        $user = $usuarioRepository->find($id);
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepository->find($id);
 
         if ($user) {
             $entityManager->remove($user);
             $entityManager->flush();
-            $this->addFlash('success', "El usuario " . $user->getUsername() . " ha sido eliminado correctamente!");
+            $this->addFlash('success', "User " . $user->getUsername() . " has been deleted correctly!");
 
             //LOGGER
 
             $logger = new Logger('usuario');
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-            $logger->info("El usuario " . $user->getUsername() . " ha sido eliminado");
+            $logger->info("User " . $user->getUsername() . " has been deleted");
 
             return $this->redirectToRoute('home');
         }

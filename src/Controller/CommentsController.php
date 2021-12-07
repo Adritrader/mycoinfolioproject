@@ -24,6 +24,9 @@ class CommentsController extends AbstractController
      */
     public function index(): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $commentsRepository = $this->getDoctrine()->getRepository(Comment::class);
         $comments = $commentsRepository->findAll();
 
@@ -45,6 +48,9 @@ class CommentsController extends AbstractController
      */
     public function create(Request $request, int $id)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $comment = new Comment();
 
         $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
@@ -65,7 +71,7 @@ class CommentsController extends AbstractController
                     $comment->setPicture($filename);
                 } catch (FileException $e) {
                     $this->addFlash('danger', $e->getMessage());
-                    return $this->redirectToRoute('index');
+                    return $this->redirectToRoute('home');
                 }
             }
 
@@ -92,7 +98,7 @@ class CommentsController extends AbstractController
 
             // Flash message
 
-            $this->addFlash('success', "Category has been created succesfully");
+            $this->addFlash('success', "Comment has been created succesfully");
 
 
             return $this->redirectToRoute('show_analysis', array('id' => $id));
@@ -105,8 +111,10 @@ class CommentsController extends AbstractController
     /**
      * @Route("/comment/{id}/edit", name="edit_comment")
      */
-    public function editAnalysis(int $id, Request $request)
+    public function editComment(int $id, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
 
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);
         $comment = $commentRepository->find($id);
@@ -136,17 +144,17 @@ class CommentsController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
-            $this->addFlash('success', "Analysis number " . $comment->getId() . " has been edited successfully!");
+            $this->addFlash('success', "Comment number " . $comment->getId() . " has been edited successfully!");
 
             //LOGGER
 
-            $logger = new Logger('Analysis');
+            $logger = new Logger('Comment');
             $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
-            $logger->info('Analysis ' . $comment->getId() . ' successfully edited on ' . date("Y-m-d H:i:s", time()));
+            $logger->info('Comment ' . $comment->getId() . ' successfully edited on ' . date("Y-m-d H:i:s", time()));
 
             return $this->redirectToRoute('home');
         }
-        return $this->render('comment/edit_analysis.html.twig', array(
+        return $this->render('comments/edit_comment.html.twig', array(
             'form' => $form->createView()));
     }
 
@@ -155,11 +163,8 @@ class CommentsController extends AbstractController
      */
     public function destroy(int $id)
     {
-
-        /*
         $this->denyAccessUnlessGranted('ROLE_ADMIN',
-            null, 'Acceso restringido a administradores');*/
-
+            null, 'Access Denied');
 
         $entityManager =$this->getDoctrine()->getManager();
         $commentRepository = $this->getDoctrine()->getRepository(Comment::class);

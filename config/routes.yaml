@@ -1,6 +1,9 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+    path: /
+    controller: App\Controller\SecurityController::login
+login:
+  path: /login
+  controller: App\Controller\SecurityController::login
 
 api_login_check:
   path: api/v1/login_check

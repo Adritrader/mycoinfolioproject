@@ -58,6 +58,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
+
             // Asignamos la fecha de actualización, por defecto es la fecha de creación del usuario
 
             $user->setCreatedAt(new \DateTimeImmutable());

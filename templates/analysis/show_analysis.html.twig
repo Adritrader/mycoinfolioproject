@@ -20,10 +20,10 @@
     <hr>
 </div>
 <div class="container-fluid">
-    <div class="row fila-blog">
+    <div class="row">
         <div class="container-fluid">
-            <a style="text-decoration: none; color: white" class="btn px-0 py-0 mt-0 " href="{{ path('analysis') }}">
-                <button class="btn btn-danger">
+            <a style="text-decoration: none; color: white" class="btn px-0 py-0 mt-0" href="{{ path('analysis') }}">
+                <button class="btn btn-secondary">
                     <i class="far fa-arrow-alt-circle-left"></i> Back
                 </button>
             </a>
@@ -52,13 +52,19 @@
                                             {% if comment.picture %}
                                         <div class="col-2">
 
-                                            <img class="w-50 p-3" src="{{ asset(avatar_public_directory ~  comment.picture) }}" alt="image">
+                                            <img class="w-50 p-3" src="{{ asset(analysis_public_directory ~  comment.picture) }}" alt="image">
                                         </div>
                                             {% endif %}
 
                                         <div class="col-8">
                                         <p class="fecha-entrada mt-3"><i class="fas fa-calendar"></i>&nbsp;Published on: <span>{{ comment.date | date }}</span></p>
                                         <p class="mt-2">{{ comment.message }}</p>
+
+                                            <div class="row justify-content-end mt-4 mb-0">
+
+                                                <a href="{{path('edit_comment', {id: comment.id})}}"><i class="far fa-edit px-3"></i></a>
+                                                <a href="{{path('destroy_comment', {id: comment.id})}}"><i class="fas fa-trash px-3"></i></a>
+                                            </div>
 
 
                                             {% endfor %}

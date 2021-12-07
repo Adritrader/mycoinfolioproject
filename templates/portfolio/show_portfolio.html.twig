@@ -5,6 +5,7 @@
 {% block body %}
     <div class="page-breadcrumb">
         <div class="row">
+
             <div class="col-12 d-flex no-block align-items-center">
                 <h4 class="page-title">Portfolio</h4>
                 <div class="ml-auto text-right">
@@ -22,6 +23,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="container-fluid">
+                <a style="text-decoration: none; color: white" class="btn" href="{{ path('portfolios') }}">
+                    <button class="btn btn-secondary">
+                        <i class="far fa-arrow-alt-circle-left"></i> Back
+                    </button>
+                </a>
                 {% if app.user %}
                 <a style="text-decoration: none; color: white" href="{{ path('create_crypto', {id: portfolio.id}) }}" class="btn">
                     <button class="btn btn-primary">

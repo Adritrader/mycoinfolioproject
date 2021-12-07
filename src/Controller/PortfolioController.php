@@ -20,6 +20,9 @@ class PortfolioController extends AbstractController
     public function index(): Response
     {
 
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $portfoliosRepository = $this->getDoctrine()->getRepository(Portfolio::class);
         $portfolios = $portfoliosRepository->findAll();
 
@@ -42,6 +45,9 @@ class PortfolioController extends AbstractController
      */
     public function create(Request $request, int $id)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $portfolio = new Portfolio();
 
         $userRepository = $this->getDoctrine()->getRepository(User::class);
@@ -81,8 +87,9 @@ class PortfolioController extends AbstractController
     public function show(int $id)
     {
 
-        /*$this->denyAccessUnlessGranted('ROLE_ADMIN',
-            null, 'Acceso restringido a administradores');*/
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $portfolioRepository = $this->getDoctrine()->getRepository(Portfolio::class);
         $portfolio = $portfolioRepository->find($id);
 

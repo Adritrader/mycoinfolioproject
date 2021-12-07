@@ -20,9 +20,9 @@
     <hr>
 </div>
 <div class="container-fluid">
-    <div class="row fila-blog">
+    <div class="row">
         <div class="container-fluid">
-            <div class="col-12 col-entradas-blog">
+            <div class="col-12">
 
                 <h2>Comments</h2>
 
@@ -37,11 +37,11 @@
                                 </div>
                                 {%  endif %}
                                 <div class="col-8">
-                                    <p class="fecha-entrada"><i class="fas fa-user"></i>{{ comment.user.username }}<i class="fas fa-calendar"></i>&nbsp;Published on: <span>{{ comment.date | date }}</span></p>
+                                    <p class="fecha-entrada"><i class="fas fa-user mx-2"></i>{{ comment.user.username }}<i class="fas fa-calendar mx-2"></i>&nbsp;Published on: <span>{{ comment.date | date }}</span></p>
                                     <p class="texto-entrada">{{ comment.message }} </p>
-                                    <div class="row justify-content-end mt-4 mb-0">
-                                        <a href="{{path('edit_comment', {id: comment.id})}}"><button class="btn btn-warning mx-1">Edit</button></a>
-                                        <a href="{{path('destroy_comment', {id: comment.id})}}"><button class="btn btn-danger mx-1">Delete</button></a>
+                                    <div class="row align-bottom justify-content-end mt-3 mb-0">
+                                        <a href="{{path('edit_comment', {id: comment.id})}}"><button class="btn btn-warning mx-1"><i class="fas fa-edit mx-1"></i>Edit</button></a>
+                                        <a href="{{path('destroy_comment', {id: comment.id})}}"><button class="btn btn-danger mx-1"><i class="fa fa-trash-alt mx-1"></i>Delete</button></a>
                                     </div>
                                 </div>
                             </div>

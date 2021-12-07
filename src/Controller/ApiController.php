@@ -95,6 +95,7 @@ class ApiController extends AbstractController
             );
             // Assigning update date, its the creation time by default.
             $user->setCreatedAt(new \DateTimeImmutable());
+
             /*
             // Update date, null default
 
@@ -116,7 +117,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}/user", name="api_update_user", methods={"PUT"})
+     * @Route("/users/{id}/edit", name="api_update_user", methods={"PUT"})
      */
     public function update($id, Request $request): JsonResponse {
 
@@ -133,9 +134,45 @@ class ApiController extends AbstractController
         //Assigning modified time
 
         $user->setAvatar($data['avatar']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        $data = $this->serializeProgrammer($user);
+        $response = new JsonResponse($data, 200);
+        return $response;
 
-        return "";
+    }
 
+    /**
+     *@Route("/users/{id}/destroy", name="api_destroy_user", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function destroy(int $id, Request $request) : JsonResponse
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
+        $entityManager =$this->getDoctrine()->getManager();
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepository->find($id);
+
+        $data = json_decode($request->getContent(), true);
+
+        if ($user) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+            $this->addFlash('success', "User " . $user->getUsername() . " has been deleted correctly!");
+
+            //LOGGER
+
+            $logger = new Logger('User');
+            $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
+            $logger->info("User " . $user->getUsername() . " has been deleted");
+
+
+        }
+        $response = new JsonResponse($data, 200);
+        return $response;
     }
 
     ////////////////////
@@ -176,16 +213,18 @@ class ApiController extends AbstractController
     {
         $analysis = new Analysis();
         $data = [];
+        $user = $this->getUser();
         if ($content = $request->getContent()) {
             $data = json_decode($content, true);
         }
 
         try {
             $analysis->setTitle($data["title"]);
-            $analysis->setOverview($data["overview"]);
-            $analysis->setTagline($data["tagline"]);
-            $analysis->setPoster($data["poster"]);
-            $analysis->setReleaseDate(new \DateTime($data["release_date"]));
+            $analysis->setImage($data["image"]);
+            $analysis->setContent($data["content"]);
+            $analysis->setDate($data["date"]);
+            $analysis->setCategory($data["category"]);
+            $analysis->setUser($user);
 
         } catch (\Exception $e) {
             $error["code"] = $e->getCode();
@@ -197,6 +236,65 @@ class ApiController extends AbstractController
         $em->flush();
 
         return new JsonResponse($analysis, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Route("/analysis/{id}/edit", name="api_update_analysis", methods={"PUT"})
+     */
+    public function updateAnalysis($id, Request $request): JsonResponse {
+
+        $analysisRepository = $this->getDoctrine()->getRepository(User::class);
+        $analysis = $analysisRepository->find($id);
+        //$user = $this->userRepository->findOneBy(['id' => $id]);
+        $data = json_decode($request->getContent(), true);
+
+        empty($data['title']) ? true : $analysis->setTitle($data['title']);
+        empty($data['image']) ? true : $analysis->setImage($data['image']);
+        empty($data['content']) ? true : $analysis->setContent($data['content']);
+        empty($data['newsletter']) ? true : $analysis->setNewsletter($data['newsletter']);
+
+        //Assigning modified time
+
+        $analysis->setImage($data['image']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($analysis);
+        $em->flush();
+        $data = $this->serializeProgrammer($analysis);
+        $response = new JsonResponse($data, 200);
+        return $response;
+
+    }
+
+    /**
+     *@Route("/analysis/{id}/destroy", name="api_destroy_analysis", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function destroyAnalysis(int $id, Request $request) : JsonResponse
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
+        $entityManager =$this->getDoctrine()->getManager();
+        $analysisRepository = $this->getDoctrine()->getRepository(User::class);
+        $analysis = $analysisRepository->find($id);
+
+        $data = json_decode($request->getContent(), true);
+
+        if ($analysis) {
+            $entityManager->remove($analysis);
+            $entityManager->flush();
+            $this->addFlash('success', "User " . $analysis->getUsername() . " has been deleted correctly!");
+
+            //LOGGER
+
+            $logger = new Logger('User');
+            $logger->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
+            $logger->info("User " . $analysis->getUsername() . " has been deleted");
+
+
+        }
+        $response = new JsonResponse($data, 200);
+        return $response;
     }
 
     ///////////////////

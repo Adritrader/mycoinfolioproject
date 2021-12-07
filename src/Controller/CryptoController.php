@@ -24,6 +24,9 @@ class CryptoController extends AbstractController
      */
     public function create(Request $request, int $id): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $crypto = new Crypto();
         $contain = new Contain();
 
@@ -73,6 +76,8 @@ class CryptoController extends AbstractController
      */
     public function edit(int $id, int $id_crypto, Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
 
         $cryptoRepository = $this->getDoctrine()->getRepository(Crypto::class);
         $crypto = $cryptoRepository->find($id_crypto);
@@ -107,15 +112,14 @@ class CryptoController extends AbstractController
      */
     public function show(int $id)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
 
-        /*$this->denyAccessUnlessGranted('ROLE_ADMIN',
-            null, 'Acceso restringido a administradores');*/
         $portfolioRepository = $this->getDoctrine()->getRepository(Portfolio::class);
         $portfolio = $portfolioRepository->find($id);
 
         $containRepository = $this->getDoctrine()->getRepository(Contain::class);
         $contain = $containRepository->findBy(array('portfolio' => $id),array('id' => 'ASC'),1 ,0)[0];
-
 
 
         if ($portfolio)

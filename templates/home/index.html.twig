@@ -46,16 +46,67 @@
     </div>
 
 
-    {% if users %}
-        {% for user in users %}
-
-            <div class="list-group-item">
-                <span class="text-center mx-3">{{user.username}}</span>
-                <span class="text-center mx-3">{{user.email}}</span>
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center mx-5">
+        <div class="card col-4 mt-3 mr-3" style="width: 18rem;">
+            <div class="card-header">
+                Last analysis added
             </div>
+            <div class="container-fluid">
 
-        {% endfor %}
-    {% else %}
-        <h2>There aren't users</h2>
-    {% endif %}
+                {% if analysis %}
+                    {% for analysi in analysis %}
+                        <div class="row">
+                        <div class="col-6">
+                            <img id="image-analysis" class="w-100 h-80 p-3" src="{{ asset(analysis_public_directory ~  analysi.image) }}" alt="imagen-entrada-blog">
+                        </div>
+                        <div class="col-12">
+                            <h1 class="titulo-entrada">{{ analysi.title }}</h1>
+                            <p class="fecha-entrada"><i class="fas fa-user mx-2">&nbsp;&nbsp;{{ analysi.user.username }}</i><i class="fas fa-calendar mx-2"></i>Published on: <span>{{ analysi.date | date }}</span><span class="mx-5 px-3 bg-primary">{{analysi.category.name}}</span></p>
+                            <p class="texto-entrada">{{ analysi.content }} </p>
+                            <div class="row justify-content-end mt-4 mb-0">
+                                <a href="{{path('create_comment', {id: analysi.id})}}"><button class="btn btn-cyan mx-1">Reply</button></a>
+                                <a href="{{path('show_analysis', {id: analysi.id})}}"><button class="btn btn-info mx-1">Show</button></a>
+                                <a href="{{path('edit_analysis', {id: analysi.id})}}"><button class="btn btn-warning mx-1">Edit</button></a>
+                                <a href="{{path('delete_analysis', {id: analysi.id})}}"><button class="btn btn-danger mx-1">Delete</button></a>
+                            </div>
+                        </div>
+                        </div>
+                        <hr class="py-3">
+                    {% endfor %}
+                {% else %}
+                    <h2>There aren't any analysis</h2>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card col-5 mt-3 mx-5" style="width: 18rem;">
+            <div class="card-header">
+                Last added Users
+            </div>
+            <div class="container-fluid">
+
+                {% if users %}
+                    {% for user in users %}
+
+                <div class="row mt-3 mx-3">
+                    <img src="{{ asset(avatar_public_directory ~  user.avatar)}}" height="50" width="50">
+                    <span class="text-center mx-3">{{user.username}}</span>
+                    <span class="text-center mx-3">{{user.email}}</span>
+                    {% for role in user.roles %}
+                        <span class="text-center mx-3">{{role}}</span>
+                    {% endfor %}
+
+                </div>
+                <hr>
+
+                    {% endfor %}
+                {% else %}
+                    <h2>There aren't users</h2>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

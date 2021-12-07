@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Analysis;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,17 +15,26 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',
+            null, 'Access Denied');
+
         $usersRepository = $this->getDoctrine()->getRepository(User::class);
-        $users = $usersRepository->findAll();
+        $users = $usersRepository->lastUsers();
+
+        $analysisRepository = $this->getDoctrine()->getRepository(Analysis::class);
+        $analysis = $analysisRepository->lastAnalysis();
 
 
         if ($users) {
             return $this->render('home/index.html.twig', [
-                    "users" => $users]
+                    "users" => $users,
+                    "analysis" => $analysis]
             );
         } else
             return $this->render('home/index.html.twig', [
                     'users' => null,
+                    'analysis' => null
                 ]
             );
     }
