@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 23-11-2021 a las 17:15:18
+-- Tiempo de generación: 08-12-2021 a las 16:00:01
 -- Versión del servidor: 5.7.31
 -- Versión de PHP: 7.4.9
 
@@ -39,14 +39,16 @@ CREATE TABLE IF NOT EXISTS `analysis` (
   PRIMARY KEY (`id`),
   KEY `IDX_33C73012469DE2` (`category_id`),
   KEY `IDX_33C730A76ED395` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `analysis`
 --
 
 INSERT INTO `analysis` (`id`, `title`, `image`, `content`, `date`, `category_id`, `user_id`) VALUES
-(1, 'XPR expect great upside', '4162b1b506dd.png', 'sadasfdsfdsfdsfdsfdsfd', '2021-11-23 16:27:42', 1, 2);
+(1, 'XPR expect great upside', '4162b1b506dd.png', 'sadasfdsfdsfdsfdsfdsfd', '2021-11-23 16:27:42', 1, 2),
+(2, 'BTC Moving to the moon', '81505fdb8cbe.png', 'n one of the scenarios published on the previous analysis on December 2, I was watching also for the price to test the low of the rectangular pattern again and as we can see it already happened.\r\n\r\nNow we can see also an interesting fact added in our chart. On December 4, and December 6 we can see a big sell of and after that all the price decrease was recovered again.\r\n\r\nSo as we can see the price has its own comfort area located between 21 and 27.5\r\nWhen the price will move above the comfort area from the technical perspective it should explode very strong to the upside.', '2021-12-08 15:52:38', 1, 2),
+(3, 'BTC Moving to the moon', 'f91e992344f8.png', 'n one of the scenarios published on the previous analysis on December 2, I was watching also for the price to test the low of the rectangular pattern again and as we can see it already happened.\r\n\r\nNow we can see also an interesting fact added in our chart. On December 4, and December 6 we can see a big sell of and after that all the price decrease was recovered again.\r\n\r\nSo as we can see the price has its own comfort area located between 21 and 27.5\r\nWhen the price will move above the comfort area from the technical perspective it should explode very strong to the upside.', '2021-12-08 15:54:57', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -59,14 +61,17 @@ CREATE TABLE IF NOT EXISTS `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `category`
 --
 
 INSERT INTO `category` (`id`, `name`) VALUES
-(1, 'Technical');
+(1, 'Technical'),
+(2, 'Fundamental'),
+(3, 'Chamanic'),
+(4, 'Test');
 
 -- --------------------------------------------------------
 
@@ -80,8 +85,22 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `message` varchar(1500) COLLATE utf8mb4_unicode_ci NOT NULL,
   `date` datetime NOT NULL,
   `picture` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `user_id` int(11) NOT NULL,
+  `analysis_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_9474526CA76ED395` (`user_id`),
+  KEY `IDX_9474526C7941003F` (`analysis_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `comment`
+--
+
+INSERT INTO `comment` (`id`, `message`, `date`, `picture`, `user_id`, `analysis_id`) VALUES
+(4, 'Mierda', '2021-11-24 23:46:03', '5f134e96092a.jpg', 2, 1),
+(5, 'joderrrrrrrrrr', '2021-11-24 23:46:28', NULL, 2, 1),
+(6, 'We built Ideas so that anyone, anywhere in the world, can easily share their thoughts and opinions on global markets. Now, thousands and thousands of users create Ideas every day from our charting platform', '2021-12-08 15:55:36', '636b7948458a.png', 2, 2),
+(7, 'After the recent top at 115.50, UsdJpy dropped aggressively and reached 112.50 support zone .\r\nFrom here a rebound has followed at this moment the pair is reversing from 113.50 zone resistance.', '2021-12-08 15:56:46', '9117f396fe89.png', 2, 2);
 
 -- --------------------------------------------------------
 
@@ -97,14 +116,15 @@ CREATE TABLE IF NOT EXISTS `contain` (
   PRIMARY KEY (`id`),
   KEY `IDX_4BEFF7C8E9571A63` (`crypto_id`),
   KEY `IDX_4BEFF7C8B96B5643` (`portfolio_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `contain`
 --
 
 INSERT INTO `contain` (`id`, `crypto_id`, `portfolio_id`) VALUES
-(1, 1, 1);
+(1, 1, 1),
+(2, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -120,14 +140,15 @@ CREATE TABLE IF NOT EXISTS `crypto` (
   `buy_date` datetime NOT NULL,
   `quantity` double NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `crypto`
 --
 
 INSERT INTO `crypto` (`id`, `name`, `entry_price`, `buy_date`, `quantity`) VALUES
-(1, 'BTC', 6540, '2016-09-12 00:00:00', 0.65);
+(1, 'BTC', 6530, '2016-09-12 00:00:00', 0.65),
+(2, 'LTC', 210, '2020-07-09 00:00:00', 2);
 
 -- --------------------------------------------------------
 
@@ -154,7 +175,9 @@ INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_
 ('DoctrineMigrations\\Version20211123154617', '2021-11-23 15:46:24', 165),
 ('DoctrineMigrations\\Version20211123155326', '2021-11-23 15:53:31', 162),
 ('DoctrineMigrations\\Version20211123155514', '2021-11-23 15:55:17', 165),
-('DoctrineMigrations\\Version20211123161712', '2021-11-23 16:17:17', 251);
+('DoctrineMigrations\\Version20211123161712', '2021-11-23 16:17:17', 251),
+('DoctrineMigrations\\Version20211124163800', '2021-11-24 16:38:11', 142),
+('DoctrineMigrations\\Version20211124233156', '2021-11-24 23:32:01', 168);
 
 -- --------------------------------------------------------
 
@@ -171,14 +194,15 @@ CREATE TABLE IF NOT EXISTS `portfolio` (
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_A9ED1062A76ED395` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `portfolio`
 --
 
 INSERT INTO `portfolio` (`id`, `created_at`, `modified_at`, `total_price`, `user_id`) VALUES
-(1, '2021-11-23 16:11:53', NULL, NULL, 2);
+(1, '2021-11-23 16:11:53', NULL, NULL, 2),
+(2, '2021-12-08 15:58:23', NULL, NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -207,8 +231,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `email`, `roles`, `password`, `username`, `avatar`, `created_at`, `modified_at`, `newsletter`) VALUES
 (2, 'admin@admin.com', '[\"ROLE_ADMIN\"]', '$2y$13$fcsoCeTncgZGjMa5b60gqOYXeZqVPbktic3BbQooXRqYWpRvc3Pei', 'admin', '609d9a5d61f4.png', '2021-11-22 15:22:29', '2021-11-23 15:23:12', 0),
-(3, 'user@user.com', '[]', '$2y$13$/Pl.BbRtg/VwIdfWhRQkPeuhNV6CYhN35HDs415LH9uTD8SX1e1gu', 'user', 'f62390a7a503.png', '2021-11-22 15:33:01', NULL, 1),
-(4, 'juan@juan.com', '[]', '$2y$13$PXX7Ftt8Kb2IR37Ric0E6egxaS1WTFiJi2Kpdf6KRKHtcSsorG0kC', 'juan', '28cbf894ae00.png', '2021-11-22 16:02:51', NULL, 1);
+(5, 'manager@manager.com', '[\"ROLE_MANAGER\"]', '$2y$13$D08FpQ4OFWwwSy2WgNOtuew.t2lulMrvYrsB.uX15LhXkJ1bfJbJq', 'manager', '1eaa2e013d85.jpg', '2021-12-08 15:49:10', NULL, 1),
+(6, 'user@user.com', '[]', '$2y$13$6W2KtRM9DwStYR6QO.OEZeb9bDpi8c.a99iCbXOjym5qvc3AXKjaq', 'user', 'c1804ba3f0ba.png', '2021-12-08 15:50:26', NULL, 1);
 
 --
 -- Restricciones para tablas volcadas
@@ -220,6 +244,13 @@ INSERT INTO `user` (`id`, `email`, `roles`, `password`, `username`, `avatar`, `c
 ALTER TABLE `analysis`
   ADD CONSTRAINT `FK_33C73012469DE2` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
   ADD CONSTRAINT `FK_33C730A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Filtros para la tabla `comment`
+--
+ALTER TABLE `comment`
+  ADD CONSTRAINT `FK_9474526C7941003F` FOREIGN KEY (`analysis_id`) REFERENCES `analysis` (`id`),
+  ADD CONSTRAINT `FK_9474526CA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Filtros para la tabla `contain`

@@ -106,7 +106,7 @@ class AnalysisController extends AbstractController
 
             // Flash message
 
-            $this->addFlash('success', "User '". $analysis->getUser() ."' has been created analysis with ID: '" . $analysis->getId()."'.");
+            $this->addFlash('success', "An analysis has been created analysis with ID: '" . $analysis->getId()."'.");
 
 
             return $this->redirectToRoute('home');
