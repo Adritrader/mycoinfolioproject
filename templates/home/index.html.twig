@@ -49,7 +49,7 @@
 <div class="container-fluid mt-5">
     <div class="row justify-content-center mx-5">
         <div class="card col-4 mt-3 mr-3" style="width: 18rem;">
-            <div class="card-header">
+            <div class="card-header mt-3">
                 Last analysis added
             </div>
             <div class="container-fluid">
@@ -80,16 +80,18 @@
             </div>
         </div>
 
-        <div class="card col-5 mt-3 mx-5" style="width: 18rem;">
-            <div class="card-header">
+        <div class="card col-5 mt-3 mx-5" style="width: 18rem; height: 100%;">
+            <div class="card-header mt-3">
                 Last added Users
             </div>
             <div class="container-fluid">
+
 
                 {% if users %}
                     {% for user in users %}
 
                 <div class="row mt-3 mx-3">
+
                     <img src="{{ asset(avatar_public_directory ~  user.avatar)}}" height="50" width="50">
                     <span class="text-center mx-3">{{user.username}}</span>
                     <span class="text-center mx-3">{{user.email}}</span>
@@ -101,6 +103,7 @@
                 <hr>
 
                     {% endfor %}
+
                 {% else %}
                     <h2>There aren't users</h2>
                 {% endif %}
