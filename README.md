@@ -38,7 +38,7 @@ Este proyecto proporciona una API RESTful segura y robusta que permite a los usu
 git clone https://github.com/Adritrader/mycoinfolioproject.git
 cd mycoinfolioproject
 
-´´´
+```
 
 ### 2. Crea el entorno
 ```bash
@@ -47,7 +47,7 @@ cp .env .env.local
 
 Configura .env.local con tus datos de base de datos y JWT si es necesario.
 
-´´´
+```
 
 ### 3. Levanta el entorno con Docker
 
@@ -55,7 +55,7 @@ Configura .env.local con tus datos de base de datos y JWT si es necesario.
 
 docker-compose up -d --build
 
-´´´
+```
 
 
 ### 4. Instala dependencias y configura
@@ -66,7 +66,7 @@ composer install
 php bin/console doctrine:migrations:migrate
 php bin/console lexik:jwt:generate-keypair
 
-´´´
+```
 
 🧪 Tests
 
@@ -74,7 +74,7 @@ php bin/console lexik:jwt:generate-keypair
 
 php bin/phpunit
 
-´´´
+```
 
 📁 Estructura general
 
@@ -89,7 +89,7 @@ mycoinfolioproject/
 ├── docker/               # Configuración de contenedores
 └── .env / docker-compose.yml / README.md
 
-´´´
+```
 
 👨‍💻 Autor
 Adrián García
